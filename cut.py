@@ -27,4 +27,3 @@ string_df = pd.DataFrame(sentences, columns=['contents'])
 string_df.to_csv(pjoin('data', 'cut-no-label.txt'),
         header=None, index=None, sep='\t')
 
-

@@ -7,15 +7,15 @@ import time
 
 
 start_time = time.time()
-df = pd.read_csv(pjoin('data', 'cut-labeled.txt'), sep='\t',
-        header=None, na_filter=False, skip_blank_lines=False)
-matrix = df.values[:1000]
+with open(pjoin('data', 'cut-labeled.txt')) as f:
+    matrix = f.read().split('\n')[:-1]
+print('train len: {}'.format(len(matrix)))
 print('Loading takes {}s'.format(time.time() - start_time))
 
 start_time = time.time()
 sentences = []
 for i in range(len(matrix)):
-    row = matrix[i]
+    row = matrix[i].split('\t')
     sentence = LabeledSentence(row[0].split(' '), [str(i)])
     sentences.append(sentence)
 
@@ -24,7 +24,35 @@ model.build_vocab(sentences)
 model.train(sentences, total_examples=model.corpus_count, \
         epochs=2,
         )
-print('Doc2Vector takes {}s'.format(time.time() - start_time))
+print('Doc2Vector training takes {}s'.format(time.time() - start_time))
 
-print(matrix[0][0])
-print(model.infer_vector(matrix[0][0]))
+start_time = time.time()
+vectoriezed = []
+for row in matrix:
+    row = row.split('\t')
+    vec = list(model.infer_vector(row[0]))
+    vec.append(row[-1])
+    vectoriezed.append(vec)
+
+df_out = pd.DataFrame(vectoriezed)
+out_file = pjoin('data', 'vec-train.txt')
+df_out.to_csv(out_file, header=None, index=None, sep=',')
+print('write to {}'.format(out_file))
+print('vectorizing train set takes {}s'.format(time.time() - start_time))
+
+start_time = time.time()
+with open(pjoin('data', 'cut-no-label.txt')) as f:
+    matrix = f.read().split('\n')[:-1]
+print('test len: {}'.format(len(matrix)))
+
+vectoriezed = []
+for row in matrix:
+    vec = list(model.infer_vector(row))
+    vectoriezed.append(vec)
+
+df_out = pd.DataFrame(vectoriezed)
+out_file = pjoin('data', 'vec-test.txt')
+df_out.to_csv(out_file, header=None, index=None, sep=',')
+print('write to {}'.format(out_file))
+print('vectorizing test set takes {}s'.format(time.time() - start_time))
+
