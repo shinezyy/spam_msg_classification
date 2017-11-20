@@ -16,7 +16,7 @@ start_time = time.time()
 sentences = []
 for i in range(len(matrix)):
     row = matrix[i].split('\t')
-    sentence = LabeledSentence(row[0].split(' '), [str(i)])
+    sentence = LabeledSentence(row[-1].split(' '), [str(i)])
     sentences.append(sentence)
 
 model = Doc2Vec(alpha=0.025, min_alpha=0.025)  # use fixed learning rate
@@ -30,8 +30,8 @@ start_time = time.time()
 vectoriezed = []
 for row in matrix:
     row = row.split('\t')
-    vec = list(model.infer_vector(row[0]))
-    vec.append(row[-1])
+    vec = list(model.infer_vector(row[-1]))
+    vec.append(int(row[0]))
     vectoriezed.append(vec)
 
 df_out = pd.DataFrame(vectoriezed)

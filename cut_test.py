@@ -20,7 +20,9 @@ for row in data:
     if row[-1] == '':
         sentences.append(' ')
     else:
-        sentences.append(' '.join(jieba.cut(row[-1].replace(' ', ''))))
+        s = row[-1].replace(' ', '')
+        # s = s.replace('\r\n', '\r')
+        sentences.append(' '.join(jieba.cut(s)))
 print('Cutting takes {}s'.format(time.time() - start_time))
 
 string_df = pd.DataFrame(sentences, columns=['contents'])
