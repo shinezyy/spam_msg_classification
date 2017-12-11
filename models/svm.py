@@ -8,7 +8,7 @@ from sklearn.metrics import confusion_matrix
 
 
 start_time = time.time()
-train_data_file = pjoin('data', 'vec-train.txt')
+train_data_file = pjoin('..', 'data', 'vec-train.txt')
 df = pd.read_csv(train_data_file, sep=',', header=None)
 print('Loading takes {}s'.format(time.time() - start_time))
 matrix = df.values.astype(np.float32)
