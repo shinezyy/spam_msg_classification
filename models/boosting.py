@@ -48,9 +48,10 @@ def test_doc2vec():
         matrix[:, :-1], matrix[:, -1], test_size=0.2, random_state=0))
 
 
-def test_sparse(x_file, y_file):
+def test_sparse(x_file, y_file, random_seed: int):
     """
     Wrapper for sparse representation
+    :param random_seed: fixed random seed to walk around BUG in xgboost...
     :param x_file: npz file containing instances in sparse matrix
     :param y_file: labels for all instances
     """
@@ -59,11 +60,11 @@ def test_sparse(x_file, y_file):
     y = pd.read_csv(y_file, header=None).values
     print('Loading takes {}s'.format(time.time() - start_time))
     evaluate(*train_test_split(
-        X, y, test_size=0.2))
+        X, y, test_size=0.2, random_state=random_seed))
 
 
 if __name__ == '__main__':
     test_sparse(pjoin('..', 'data', 'tfidf-vec-train.npz'),
-                pjoin('..', 'data', 'labels.txt'))
+                pjoin('..', 'data', 'labels.txt'), 77)
     test_sparse(pjoin('..', 'data', 'hash-vec-train.npz'),
-                pjoin('..', 'data', 'labels.txt'))
+                pjoin('..', 'data', 'labels.txt'), 0)
