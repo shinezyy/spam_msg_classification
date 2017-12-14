@@ -1,5 +1,6 @@
 import time
 from os.path import join as pjoin
+from multiprocessing import cpu_count
 
 import pandas as pd
 import numpy as np
@@ -10,13 +11,16 @@ from sklearn.metrics import confusion_matrix
 from scipy.sparse import load_npz
 
 
-def evaluate(X_train, X_test, y_train, y_test):
+def evaluate(X_train, X_test, y_train, y_test, pos_weight):
     start_time = time.time()
     weights = np.ones_like(y_train)
-    # weights[y_train == 1] = 10
+    weights[y_train == 1] = pos_weight
     train_matrix = xgboost.DMatrix(X_train, label=y_train, weight=weights)
-    param = {'max_depth': 5, 'eta': 1, 'silent': 1,
-             'objective': 'binary:logistic', 'nthread': 2}
+    param = {
+            'max_depth': 5, 'eta': 1, 'silent': 1,
+             'objective': 'binary:logistic',
+             'nthread': cpu_count() // 2  # for SMT
+             }
     clf = xgboost.train(params=param, dtrain=train_matrix, num_boost_round=30)
     print('Training takes {}s'.format(time.time() - start_time))
 
@@ -45,7 +49,7 @@ def test_doc2vec():
     print('Loading takes {}s'.format(time.time() - start_time))
     matrix = df.values.astype(np.float32)
     evaluate(*train_test_split(
-        matrix[:, :-1], matrix[:, -1], test_size=0.2, random_state=0))
+        matrix[:, :-1], matrix[:, -1], test_size=0.2, random_state=0), w)
 
 
 def test_sparse(x_file, y_file, random_seed: int):
@@ -55,12 +59,16 @@ def test_sparse(x_file, y_file, random_seed: int):
     :param x_file: npz file containing instances in sparse matrix
     :param y_file: labels for all instances
     """
+    print('='*80)
     start_time = time.time()
     X = load_npz(x_file)
     y = pd.read_csv(y_file, header=None).values
     print('Loading takes {}s'.format(time.time() - start_time))
-    evaluate(*train_test_split(
-        X, y, test_size=0.2, random_state=random_seed))
+    for w in range(1, 10):
+        print('-'*80)
+        print('Weights for positive class:{}'.format(w))
+        evaluate(*train_test_split(
+            X, y, test_size=0.2, random_state=random_seed), w)
 
 
 if __name__ == '__main__':
