@@ -1,5 +1,6 @@
 import time
 from os.path import join as pjoin
+from multiprocessing import cpu_count
 
 import pandas as pd
 import numpy as np
@@ -15,8 +16,11 @@ def evaluate(X_train, X_test, y_train, y_test):
     weights = np.ones_like(y_train)
     weights[y_train == 1] = 3
     train_matrix = xgboost.DMatrix(X_train, label=y_train, weight=weights)
-    param = {'max_depth': 5, 'eta': 1, 'silent': 1,
-             'objective': 'binary:logistic', 'nthread': 2}
+    param = {
+            'max_depth': 5, 'eta': 1, 'silent': 1,
+            'objective': 'binary:logistic',
+            'nthread': cpu_count() // 2  # for SMT
+            }
     clf = xgboost.train(params=param, dtrain=train_matrix, num_boost_round=30)
     print('Training takes {}s'.format(time.time() - start_time))
 
@@ -64,7 +68,7 @@ def test_sparse(x_file, y_file, random_seed: int):
 
 
 if __name__ == '__main__':
-    test_sparse(pjoin('..', 'data', 'tfidf-vec-train.npz'),
-                pjoin('..', 'data', 'labels.txt'), 77)
     test_sparse(pjoin('..', 'data', 'hash-vec-train.npz'),
-                pjoin('..', 'data', 'labels.txt'), 0)
+                pjoin('..', 'data', 'labels.txt'), 1)
+    test_sparse(pjoin('..', 'data', 'tfidf-vec-train.npz'),
+                pjoin('..', 'data', 'labels.txt'), 7)
