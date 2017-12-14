@@ -19,10 +19,10 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 start_time = time.time()
 weights = np.ones_like(y_train)
-weights[y_train == 1] = 10
+# weights[y_train == 1] = 10
 train_matrix = xgboost.DMatrix(X_train, label=y_train, weight=weights)
 param = {'max_depth': 5, 'eta': 1, 'silent': 1,
-         'objective': 'binary:logistic', 'nthread': 1}
+         'objective': 'binary:logistic', 'nthread': 4}
 clf = xgboost.train(params=param, dtrain=train_matrix, num_boost_round=30)
 print('Training takes {}s'.format(time.time() - start_time))
 
@@ -34,6 +34,8 @@ TN, FP, FN, TP = confusion_matrix(y_test, y_pred).ravel()
 print("TN: {}, FP: {}".format(TN, FP))
 print("FN: {}, TP: {}".format(FN, TP))
 print('recall: {}'.format(TP / (FN + TP)))
+print('precision: {}'.format(TP / (FP + TP)))
+print('accuracy: {}'.format((TP + TN) / (FN + FP + TP + TN)))
 
 print('Prediction takes {}s'.format(time.time() - start_time))
 
