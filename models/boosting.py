@@ -9,7 +9,7 @@ from pprint import pprint
 
 
 start_time = time.time()
-train_data_file = pjoin('..', 'data', 'vec-train-small.txt')
+train_data_file = pjoin('..', 'data', 'vec-train.txt')
 df = pd.read_csv(train_data_file, sep=',', header=None)
 print('Loading takes {}s'.format(time.time() - start_time))
 matrix = df.values.astype(np.float32)
@@ -19,7 +19,6 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 start_time = time.time()
 weights = np.ones_like(y_train)
-weights = weights/10
 weights[y_train == 1] = 10
 train_matrix = xgboost.DMatrix(X_train, label=y_train, weight=weights)
 param = {'max_depth': 5, 'eta': 1, 'silent': 1,
