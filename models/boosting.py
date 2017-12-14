@@ -13,7 +13,7 @@ from scipy.sparse import load_npz
 def evaluate(X_train, X_test, y_train, y_test):
     start_time = time.time()
     weights = np.ones_like(y_train)
-    # weights[y_train == 1] = 10
+    weights[y_train == 1] = 3
     train_matrix = xgboost.DMatrix(X_train, label=y_train, weight=weights)
     param = {'max_depth': 5, 'eta': 1, 'silent': 1,
              'objective': 'binary:logistic', 'nthread': 2}
