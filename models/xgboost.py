@@ -5,7 +5,7 @@ from multiprocessing import cpu_count
 import pandas as pd
 import numpy as np
 
-from sklearn.ensemble import GradientBoostingClassifier
+import xgboost
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from scipy.sparse import load_npz
@@ -13,21 +13,20 @@ from scipy.sparse import load_npz
 
 def evaluate(X_train, X_test, y_train, y_test):
     start_time = time.time()
-    y_train = y_train.reshape(-1)
-    y_test = y_test.reshape(-1)
     weights = np.ones_like(y_train)
     weights[y_train == 1] = 3
-    clf = GradientBoostingClassifier(
-            n_estimators=30,
-            learning_rate=1.0,
-            max_depth=5,
-            random_state=0
-            )
-    clf.fit(X_train, y_train, sample_weight=weights)
+    train_matrix = xgboost.DMatrix(X_train, label=y_train, weight=weights)
+    param = {
+            'max_depth': 5, 'eta': 1, 'silent': 1,
+            'objective': 'binary:logistic',
+            'nthread': cpu_count() // 2  # for SMT
+            }
+    clf = xgboost.train(params=param, dtrain=train_matrix, num_boost_round=30)
     print('Training takes {}s'.format(time.time() - start_time))
 
     start_time = time.time()
-    y_pred = clf.predict(X_test)
+    test_matrix = xgboost.DMatrix(X_test, label=y_test)
+    y_pred = clf.predict(test_matrix)
     y_pred = np.array([int(x > 0.5) for x in y_pred])
     TN, FP, FN, TP = confusion_matrix(y_test, y_pred).ravel()
     print("TN: {}, FP: {}".format(TN, FP))
