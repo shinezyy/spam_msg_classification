@@ -2,27 +2,25 @@ import time
 from os.path import join as pjoin
 from multiprocessing import cpu_count
 
-import pandas as pd
 import numpy as np
-
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
+import pandas as pd
 from scipy.sparse import load_npz
 
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 
-def evaluate(X_train, X_test, y_train, y_test):
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+
+
+def evaluate(X_train, X_test, y_train, y_test, clf):
     start_time = time.time()
     y_train = y_train.reshape(-1)
     y_test = y_test.reshape(-1)
     weights = np.ones_like(y_train)
     weights[y_train == 1] = 3
-    clf = GradientBoostingClassifier(
-            n_estimators=30,
-            learning_rate=1.0,
-            max_depth=5,
-            random_state=0
-            )
+
     clf.fit(X_train, y_train, sample_weight=weights)
     print('Training takes {}s'.format(time.time() - start_time))
 
@@ -39,7 +37,7 @@ def evaluate(X_train, X_test, y_train, y_test):
     print('Prediction takes {}s'.format(time.time() - start_time))
 
 
-def test_doc2vec():
+def test_doc2vec(clf):
     """
     Wrapper for dense representation
     Only doc2vec uses dense representation
@@ -50,10 +48,11 @@ def test_doc2vec():
     print('Loading takes {}s'.format(time.time() - start_time))
     matrix = df.values.astype(np.float32)
     evaluate(*train_test_split(
-        matrix[:, :-1], matrix[:, -1], test_size=0.2, random_state=0))
+        matrix[:, :-1], matrix[:, -1], test_size=0.2, random_state=0),
+        clf)
 
 
-def test_sparse(x_file, y_file, random_seed: int):
+def test_sparse(x_file, y_file, random_seed: int, clf):
     """
     Wrapper for sparse representation
     :param random_seed: fixed random seed to walk around BUG in xgboost...
@@ -65,11 +64,32 @@ def test_sparse(x_file, y_file, random_seed: int):
     y = pd.read_csv(y_file, header=None).values
     print('Loading takes {}s'.format(time.time() - start_time))
     evaluate(*train_test_split(
-        X, y, test_size=0.2, random_state=random_seed))
+        X, y, test_size=0.2, random_state=random_seed),
+        clf)
+
+
+
+def new_GBC():
+    clf = GradientBoostingClassifier(
+            n_estimators=100,
+            learning_rate=1.0,
+            max_depth=5,
+            random_state=0
+            )
+    return clf
+
+
+def new_AdaBoost():
+    base_clf = DecisionTreeClassifier(max_depth=5)
+    clf = AdaBoostClassifier(
+            base_estimator=base_clf,
+            n_estimators=200
+            )
+    return clf
 
 
 if __name__ == '__main__':
     test_sparse(pjoin('..', 'data', 'hash-vec-train.npz'),
-                pjoin('..', 'data', 'labels.txt'), 1)
+                pjoin('..', 'data', 'labels.txt'), 1, new_AdaBoost())
     test_sparse(pjoin('..', 'data', 'tfidf-vec-train.npz'),
-                pjoin('..', 'data', 'labels.txt'), 7)
+                pjoin('..', 'data', 'labels.txt'), 7, new_AdaBoost())

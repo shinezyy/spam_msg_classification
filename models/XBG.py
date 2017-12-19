@@ -17,11 +17,11 @@ def evaluate(X_train, X_test, y_train, y_test):
     weights[y_train == 1] = 3
     train_matrix = xgboost.DMatrix(X_train, label=y_train, weight=weights)
     param = {
-            'max_depth': 5, 'eta': 1, 'silent': 1,
+            'max_depth': 6, 'eta': 1, 'silent': 1,
             'objective': 'binary:logistic',
-            'nthread': cpu_count() // 2  # for SMT
+            'nthread': 4  # for SMT
             }
-    clf = xgboost.train(params=param, dtrain=train_matrix, num_boost_round=30)
+    clf = xgboost.train(params=param, dtrain=train_matrix, num_boost_round=500)
     print('Training takes {}s'.format(time.time() - start_time))
 
     start_time = time.time()
