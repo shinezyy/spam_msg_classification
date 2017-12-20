@@ -1,0 +1,144 @@
+ada boosting with 200 weak learners, max depth = 5
+
+Loading takes 0.36015772819519043s            
+Training takes 2501.341178894043s             
+TN: 143168, FP: 697    
+FN: 636, TP: 15499     
+recall: 0.9605825844437558                    
+precision: 0.9569646826376883                 
+accuracy: 0.99166875   
+Prediction takes 5.011446475982666s           
+Loading takes 0.48272180557250977s            
+Training takes 1979.6490368843079s            
+TN: 143467, FP: 659    
+FN: 667, TP: 15207     
+recall: 0.9579816051404813                    
+precision: 0.9584646413714862                 
+accuracy: 0.9917125    
+Prediction takes 4.957199811935425s
+
+
+-----------------------------------------------------------------------
+xgboost with 150 weak learners, 3 threads, max depth = 5
+
+Loading takes 0.3716583251953125s             
+Training takes 72.21727991104126s             
+TN: 143087, FP: 778    
+FN: 601, TP: 15534     
+recall: 0.962751781840719                     
+precision: 0.9523050514958313                 
+accuracy: 0.99138125   
+Prediction takes 1.5412237644195557s          
+Loading takes 0.5113964080810547s             
+Training takes 79.39532208442688s             
+TN: 143424, FP: 702    
+FN: 598, TP: 15276     
+recall: 0.9623283356431901                    
+precision: 0.9560645888096132                 
+accuracy: 0.991875     
+Prediction takes 1.512488603591919s
+
+
+-----------------------------------------------------------------------
+xgboost with 300 weak learners, 4 threads, max depth = 5
+
+Loading takes 0.35623598098754883s             
+Training takes 101.88249611854553s             
+TN: 143248, FP: 617    
+FN: 529, TP: 15606     
+recall: 0.9672141307716146                     
+precision: 0.9619675768969981                  
+accuracy: 0.9928375    
+Prediction takes 1.6333372592926025s           
+Loading takes 0.4828948974609375s              
+Training takes 113.92211508750916s             
+TN: 143584, FP: 542    
+FN: 510, TP: 15364     
+recall: 0.9678719919365                        
+precision: 0.9659248082484597                  
+accuracy: 0.993425     
+Prediction takes 1.6120519638061523s
+
+
+-----------------------------------------------------------------------
+xgboost with 500 weak learners, 4 threads, max depth = 5
+
+Loading takes 0.38611555099487305s             
+Training takes 165.25400829315186s             
+TN: 143352, FP: 513    
+FN: 501, TP: 15634     
+recall: 0.968949488689185                      
+precision: 0.9682293924568032                  
+accuracy: 0.9936625    
+Prediction takes 2.2676756381988525s           
+Loading takes 0.5757622718811035s              
+Training takes 183.59820866584778s             
+TN: 143662, FP: 464    
+FN: 485, TP: 15389     
+recall: 0.9694468942925538                     
+precision: 0.9707310919068945                  
+accuracy: 0.99406875   
+Prediction takes 2.2483339309692383s
+
+
+-----------------------------------------------------------------------
+xgboost with 500 weak learners, 4 threads, max depth = 6
+
+Loading takes 0.3779480457305908s              
+Training takes 193.81116199493408s             
+TN: 143384, FP: 481    
+FN: 477, TP: 15658     
+recall: 0.9704369383328169                     
+precision: 0.970196418613297                   
+accuracy: 0.9940125    
+Prediction takes 2.3657991886138916s           
+Loading takes 0.4866304397583008s              
+Training takes 212.33276867866516s             
+TN: 143689, FP: 437    
+FN: 508, TP: 15366     
+recall: 0.9679979841249843                     
+precision: 0.9723470227172056                  
+accuracy: 0.99409375   
+Prediction takes 2.4378464221954346s
+
+
+-----------------------------------------------------------------------
+xgboost with 800 weak learners, 4 threads, max depth = 5
+
+Loading takes 0.3556644916534424s              
+Training takes 262.4617369174957s              
+TN: 143403, FP: 462    
+FN: 466, TP: 15669     
+recall: 0.9711186860861482                     
+precision: 0.9713594941417147                  
+accuracy: 0.9942       
+Prediction takes 2.934236764907837s            
+Loading takes 0.4840829372406006s              
+Training takes 284.3437547683716s              
+TN: 143708, FP: 418    
+FN: 492, TP: 15382     
+recall: 0.9690059216328588                     
+precision: 0.9735443037974684                  
+accuracy: 0.9943125    
+Prediction takes 2.9441146850585938s  
+
+
+-----------------------------------------------------------------------
+xgboost with 1600 weak learners, 4 threads, max depth = 5
+
+Training takes 511.20888352394104s        
+TN: 143516, FP: 349    
+FN: 463, TP: 15672     
+recall: 0.9713046172916021                     
+precision: 0.9782160913800637                  
+accuracy: 0.994925     
+Prediction takes 4.845443487167358s            
+Loading takes 0.48989129066467285s             
+Training takes 549.5605983734131s              
+TN: 143795, FP: 331    
+FN: 488, TP: 15386     
+recall: 0.9692579060098274                     
+precision: 0.9789400012725075                  
+accuracy: 0.99488125   
+Prediction takes 4.7245869636535645s           
+
