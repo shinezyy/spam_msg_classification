@@ -19,8 +19,10 @@ def evaluate(name, clf, data_name, X_train, y_train, X_test, y_test):
     if name == 'MultinomialNB' and (data_name == 'doc2vec' or data_name == 'hashing'):
         # Cannot handle negative vector
         return
-    if (name == 'GaussianNB' or name == 'BernoulliNB') and data_name != 'doc2vec':
-       return
+    if name == 'GaussianNB' and data_name != 'doc2vec':
+        return
+    if name == 'BernoulliNB' and data_name == 'doc2vec':
+        return
 
     print('{} on {}'.format(name, data_name))
     start_time = time.time()
